@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login Sistem | Mediska Malang</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: #333;
+      background: #FFF7F0;  
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      justify-content: space-between;
+    }
+
+    .top-header {
+      background: #F47721;
+      color: #fff;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .header-logo-left,
+    .header-logo-right {
+      height: 52px;
+      width: auto;
+      object-fit: contain;
+      border-radius: 5px;
+      background: #fff;
+      padding: 3px;
+    }
+
+    .brand h2 {
+      font-size: 17px;
+      line-height: 1.2;
+    }
+
+    .brand p {
+      font-size: 11px;
+      opacity: 0.9;
+    }
+
+    .login-container {
+      max-width: 400px;
+      width: 90%;
+      margin: 40px auto;
+      background: #fff;
+      border: 1px solid #F8D4B9;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(244, 119, 33, 0.1);
+      overflow: hidden;
+    }
+
+    .login-header {
+      background: #F47721;
+      color: #fff;
+      padding: 16px 20px;
+      text-align: center;
+    }
+
+    .login-header h1 {
+      font-size: 18px;
+    }
+
+    .login-header p {
+      font-size: 12px;
+      opacity: 0.9;
+      margin-top: 2px;
+    }
+
+    .login-body {
+      padding: 24px 20px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #F0C7A9;
+      border-radius: 4px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #F47721;
+    }
+
+    button {
+      width: 100%;
+      padding: 11px 16px;
+      background: #F47721;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #D95F0B;
+    }
+
+    .error-msg {
+      background: #FEF2F2;
+      color: #991B1B;
+      border: 1px solid #FCA5A5;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-bottom: 14px;
+      display: none;
+      text-align: center;
+    }
+
+    .footer {
+      padding: 16px 24px;
+      border-top: 1px solid #F8D4B9;
+      font-size: 11px;
+      color: #888;
+      text-align: center;
+      background: #fff;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="top-header">
+    <div class="brand">
+      <img src="KAI.png" alt="Logo Kiri" class="header-logo-left" onerror="this.style.display='none'">
+      <div>
+        <h2>Mediska Malang</h2>
+        <p>SISTEM ANTREAN PASIEN</p>
+      </div>
+    </div>
+    <img src="mediska.png" alt="Logo Kanan" class="header-logo-right" onerror="this.style.display='none'">
+  </div>
+
+  <div class="login-container">
+    <div class="login-header">
+      <h1>Login Akses Sistem</h1>
+      <p>Masukkan Email dan Password</p>
+    </div>
+    <div class="login-body">
+      <div id="errorMsg" class="error-msg">Email atau password salah!</div>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">Email Akses</label>
+          <input type="email" id="email" required autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" required>
+        </div>
+        <button type="submit">Masuk ke Sistem</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="footer">© Klinik Mediska Malang — Sistem Antrean Pasien</div>
+
+  <script>
+    // Data Akun dan Halaman Tujuan
+    const ACCOUNTS = {
+      "admin@mediska.kai": { pass: "adminmediska123", target: "admin.html" },
+      "dokgi@mediska.kai": { pass: "dokgi123", target: "dokter_gigi.html" },
+      "dokum@mediska.kai": { pass: "dokum123", target: "dokter_umum.html" },
+      "farmasi@mediska.kai": { pass: "farmasi123", target: "farmasi.html" },
+      "display@mediska.kai": { pass: "displaymediska123", target: "public.html" }
+    };
+
+    document.getElementById("loginForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const emailInput = document.getElementById("email").value.trim().toLowerCase();
+      const passInput = document.getElementById("password").value.trim();
+      const errorMsg = document.getElementById("errorMsg");
+
+      const account = ACCOUNTS[emailInput];
+
+      if (account && account.pass === passInput) {
+        sessionStorage.setItem("mediska_logged_in", "true");
+        sessionStorage.setItem("mediska_user_email", emailInput);
+
+        // Alihkan langsung ke halaman yang sesuai dengan akun
+        window.location.href = account.target;
+      } else {
+        errorMsg.style.display = "block";
+      }
+    });
+  </script>
+</body>
+
+</html>

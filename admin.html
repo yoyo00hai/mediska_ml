@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Pendaftaran | Mediska Malang</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: #333;
+      background: #fff;
+      line-height: 1.5;
+    }
+
+    .top-header {
+      background: #F47721;
+      color: #fff;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .header-logo-left,
+    .header-logo-right {
+      height: 52px;
+      width: auto;
+      object-fit: contain;
+      border-radius: 5px;
+      background: #fff;
+      padding: 3px;
+    }
+
+    .brand h2 {
+      font-size: 17px;
+      line-height: 1.2;
+    }
+
+    .brand p {
+      font-size: 11px;
+      opacity: 0.9;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 24px auto;
+      padding: 0 24px;
+    }
+
+    .page-title {
+      margin-top: 24px;
+      margin-bottom: 24px;
+    }
+
+    .page-title h1 {
+      font-size: 22px;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    .page-title p {
+      font-size: 12px;
+      color: #888;
+    }
+
+    .grid-layout {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 24px;
+    }
+
+    .panel {
+      border: 1px solid #F8D4B9;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+
+    .panel-head {
+      background: #FFF7F0;
+      padding: 10px 16px;
+      font-weight: bold;
+      font-size: 14px;
+      border-bottom: 1px solid #F8D4B9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-body {
+      padding: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #F0C7A9;
+      border-radius: 4px;
+      font-size: 13px;
+      outline: none;
+      font-family: inherit;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 4px;
+      width: 100%;
+    }
+
+    button.primary {
+      background: #F47721;
+      color: #fff;
+    }
+
+    button.primary:hover {
+      background: #D95F0B;
+    }
+
+    button.danger {
+      background: #EF4444;
+      color: #fff;
+    }
+
+    button.danger:hover {
+      background: #DC2626;
+    }
+
+    button.info-btn {
+      background: #3B82F6;
+      color: #fff;
+      padding: 5px 10px;
+      font-size: 11px;
+      border-radius: 4px;
+      width: auto;
+      margin: 0;
+    }
+
+    button.info-btn:hover {
+      background: #2563EB;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th {
+      background: #F47721;
+      color: #fff;
+      padding: 10px 12px;
+      text-align: left;
+      font-weight: bold;
+    }
+
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #F8D4B9;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .status.waiting {
+      background: #FFF7F0;
+      color: #B7410E;
+    }
+
+    .status.called {
+      background: #F47721;
+      color: #fff;
+    }
+
+    .status.done {
+      background: #F0F0F0;
+      color: #666;
+    }
+
+    .empty-row {
+      text-align: center;
+      color: #999;
+      padding: 30px;
+    }
+
+    .footer {
+      margin-top: 40px;
+      padding-top: 10px;
+      border-top: 1px solid #F8D4B9;
+      font-size: 11px;
+      color: #888;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .grid-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <script>
+    if (sessionStorage.getItem("mediska_logged_in") !== "true") {
+      sessionStorage.setItem("redirect_after_login", window.location.href.split('/').pop());
+      window.location.href = "login.html";
+    }
+  </script>
+
+  <div class="top-header">
+    <div class="brand">
+      <img src="KAI.png" alt="Logo Kiri" class="header-logo-left" onerror="this.style.display='none'">
+      <div>
+        <h2>Mediska Malang</h2>
+        <p>PANEL ADMIN PENDAFTARAN ANTREAN</p>
+      </div>
+    </div>
+    <img src="mediska.png" alt="Logo Kanan" class="header-logo-right" onerror="this.style.display='none'">
+  </div>
+
+  <div class="container">
+    <div class="page-title">
+      <h1>Pendaftaran Pasien Baru</h1>
+      <p>Tambah pasien ke antrean Dokter Umum atau Dokter Gigi</p>
+    </div>
+    <div class="grid-layout">
+      <div>
+        <div class="panel">
+          <div class="panel-head">Formulir Pendaftaran</div>
+          <div class="panel-body">
+            <form id="regForm">
+              <div class="form-group">
+                <label>Nama Pasien</label>
+                <input type="text" id="patientName" placeholder="Masukkan nama..." required>
+              </div>
+              <div class="form-group">
+                <label>Jenis Pasien</label>
+                <select id="patientType">
+                  <option value="BPJS">BPJS</option>
+                  <option value="Umum">Umum</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Poli / Tujuan</label>
+                <select id="doctorType">
+                  <option value="A">Dokter Umum (Antrean A)</option>
+                  <option value="B">Dokter Gigi (Antrean B)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Keluhan / Catatan (Opsional)</label>
+                <textarea id="patientComplaint" rows="2" ></textarea>
+              </div>
+              <button type="submit" class="primary">➕ Daftarkan Pasien</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head" style="background:#FEF2F2; color:#991B1B; border-bottom:1px solid #FCA5A5;">Pengaturan Sistem</div>
+          <div class="panel-body" style="display: flex; flex-direction: column; gap: 8px;">
+            <a href="riwayat.html" style="background: #3B82F6; color: #fff; padding: 10px 16px; border-radius: 4px; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none; display: block;">📊 Lihat Statistik & Riwayat Pasien</a>
+            
+            <button id="btnResetAll" class="danger">⚠ Reset Semua Antrean & Chat</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">💬 Chat Internal</div>
+          <div class="panel-body">
+            <div id="chatBox" style="height: 140px; border: 1px solid #F0C7A9; border-radius: 4px; padding: 8px; overflow-y: scroll; background: #FFF7F0; font-size: 12px; margin-bottom: 8px;"></div>
+            <div style="display: flex; flex-direction: column; gap: 6px;">
+              <select id="chatTarget" style="font-size: 11px;">
+                <option value="Semua">Semua Bagian (Broadcast)</option>
+                <option value="Admin">Admin</option>
+                <option value="Dokter Umum">Dokter Umum</option>
+                <option value="Dokter Gigi">Dokter Gigi</option>
+                <option value="Farmasi">Farmasi</option>
+              </select>
+              <div style="display: flex; gap: 6px;">
+                <input type="text" id="chatInput" placeholder="Tulis pesan..." style="font-size: 12px;">
+                <button id="btnSendChat" class="primary" style="width: 70px; margin:0; padding: 6px;">Kirim</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="panel">
+          <div class="panel-head">Daftar Semua Pasien Hari Ini</div>
+          <div class="panel-body" style="padding:0;">
+            <table>
+              <thead>
+                <tr>
+                  <th>NOMOR</th>
+                  <th>NAMA PASIEN</th>
+                  <th>JENIS</th>
+                  <th>POLI</th>
+                  <th>KELUHAN</th>
+                  <th>STATUS</th>
+                </tr>
+              </thead>
+              <tbody id="allPatientTable">
+                <tr>
+                  <td colspan="6" class="empty-row">Belum ada pasien terdaftar.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="footer">© Klinik Mediska Malang — Admin Pendaftaran</div>
+  </div>
+
+  <!-- MODAL LIHAT KELUHAN LENGKAP -->
+  <div id="complaintModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+    <div style="background:#fff; padding:24px; border-radius:8px; width:90%; max-width:400px; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
+      <h3 style="margin-bottom:8px; font-size:16px; color:#F47721;">Detail Keluhan Pasien</h3>
+      <p id="modalPatientInfo" style="font-size:12px; color:#666; margin-bottom:14px; border-bottom:1px solid #eee; padding-bottom:6px;"></p>
+      
+      <div style="background:#FFF7F0; border:1px solid #F8D4B9; padding:12px; border-radius:4px; margin-bottom:16px; font-size:13px; color:#333; white-space:pre-wrap; max-height:200px; overflow-y:auto;" id="modalComplaintBox"></div>
+
+      <button onclick="closeComplaintModal()" class="primary" style="margin:0;">Tutup</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { db } from "./config.js";
+    import { ref, set, onValue, push } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    const MY_ROLE = "Admin";
+    let state = { patients: [], nextA: 1, nextB: 1 };
+    let chats = [];
+
+    const antreanRef = ref(db, 'klinik_mediska/antrean');
+    const chatRef = ref(db, 'klinik_mediska/chat');
+    const historyRef = ref(db, 'klinik_mediska/riwayat');
+
+    function esc(v) {
+      return String(v ?? "").replace(/[&<>"']/g, c => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[c]));
+    }
+
+    onValue(antreanRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        state = {
+          patients: Array.isArray(data.patients) ? data.patients : [],
+          nextA: data.nextA || 1,
+          nextB: data.nextB || 1
+        };
+      } else {
+        state = { patients: [], nextA: 1, nextB: 1 };
+      }
+      render();
+    });
+
+    onValue(chatRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        chats = Object.values(data);
+      } else {
+        chats = [];
+      }
+      renderChat();
+    });
+
+    function saveState() {
+      set(antreanRef, state).catch(err => console.error("Gagal simpan antrean:", err));
+    }
+
+    document.getElementById("regForm").addEventListener("submit", e => {
+      e.preventDefault();
+
+      const name = document.getElementById("patientName").value.trim();
+      const patientType = document.getElementById("patientType").value;
+      const doctorTypeSelect = document.getElementById("doctorType").value;
+      const complaint = document.getElementById("patientComplaint").value.trim();
+      
+      const prefix = (doctorTypeSelect === "B") ? "B" : "A";
+
+      if (!name) return;
+
+      let seq = (prefix === "A") ? state.nextA : state.nextB;
+      const numStr = prefix + String(seq).padStart(3, "0");
+      const doctorName = (prefix === "A") ? "Dokter Umum" : "Dokter Gigi";
+
+      if (prefix === "A") state.nextA++;
+      else state.nextB++;
+
+      const newPatient = {
+        id: Date.now() + "_" + Math.random().toString(36).substr(2, 4),
+        number: numStr,
+        prefix: prefix,
+        seq: seq,
+        name: name,
+        patientType: patientType,
+        doctor: doctorName,
+        complaint: complaint || "-",
+        status: "waiting",
+        createdAt: Date.now()
+      };
+
+      state.patients.push(newPatient);
+      push(historyRef, newPatient);
+      saveState();
+
+      document.getElementById("patientName").value = "";
+      document.getElementById("patientComplaint").value = "";
+    });
+
+    document.getElementById("btnResetAll").addEventListener("click", () => {
+      if (confirm("Apakah Anda yakin ingin MENGHAPUS SEMUA data antrean dan chat hari ini?")) {
+        state = { patients: [], nextA: 1, nextB: 1 };
+        set(antreanRef, state);
+        set(chatRef, null);
+      }
+    });
+
+    window.openComplaintModal = function(id) {
+      const p = state.patients.find(item => item.id === id);
+      if(!p) return;
+
+      document.getElementById("modalPatientInfo").textContent = `No: ${p.number} — Pasien: ${p.name}`;
+      document.getElementById("modalComplaintBox").textContent = p.complaint || "-";
+      document.getElementById("complaintModal").style.display = "flex";
+    };
+
+    window.closeComplaintModal = function() {
+      document.getElementById("complaintModal").style.display = "none";
+    };
+
+    function render() {
+      const labelStatus = {
+        waiting: "Menunggu",
+        called: "Dipanggil",
+        waiting_pharmacy: "Ke Farmasi",
+        pharmacy_called: "Di Farmasi",
+        done: "Selesai"
+      };
+      const sorted = [...state.patients].reverse();
+
+      document.getElementById("allPatientTable").innerHTML = sorted.length
+        ? sorted.map(p => {
+          let complaintCell = "-";
+          if (p.complaint && p.complaint !== "-") {
+            complaintCell = `<button class="info-btn" onclick="openComplaintModal('${p.id}')">Lihat Keluhan</button>`;
+          }
+
+          return `
+            <tr>
+              <td><strong>${esc(p.number)}</strong></td>
+              <td>${esc(p.name)}</td>
+              <td>${esc(p.patientType)}</td>
+              <td>${esc(p.doctor)}</td>
+              <td>${complaintCell}</td>
+              <td><span class="status ${esc(p.status)}">${labelStatus[p.status] || p.status}</span></td>
+            </tr>
+          `;
+        }).join("")
+        : `<tr><td colspan="6" class="empty-row">Belum ada pasien terdaftar.</td></tr>`;
+    }
+
+    function renderChat() {
+      const filteredChats = chats.filter(c => c.target === "Semua" || c.sender === MY_ROLE || c.target === MY_ROLE);
+      const chatBox = document.getElementById("chatBox");
+      if (!chatBox) return;
+
+      chatBox.innerHTML = filteredChats.length ? filteredChats.map(c => `
+        <div style="margin-bottom: 6px; border-bottom: 1px dashed #F8D4B9; padding-bottom: 4px;">
+          <span style="color: #F47721; font-weight: bold;">[${esc(c.sender)}]</span> 
+          <span style="color: #888; font-size: 10px;">(ke ${esc(c.target)})</span>:<br>
+          <span>${esc(c.message)}</span>
+        </div>
+      `).join("") : `<div style="color: #999; text-align: center; padding-top: 30px;">Belum ada pesan.</div>`;
+
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    document.getElementById("btnSendChat")?.addEventListener("click", () => {
+      const input = document.getElementById("chatInput");
+      const target = document.getElementById("chatTarget").value;
+      const message = input.value.trim();
+      if (!message) return;
+
+      const newChatMessage = {
+        sender: MY_ROLE,
+        target: target,
+        message: message,
+        time: Date.now()
+      };
+
+      push(chatRef, newChatMessage);
+      input.value = "";
+    });
+  </script>
+</body>
+
+</html>

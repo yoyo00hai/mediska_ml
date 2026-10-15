@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rekap Statistik & Riwayat Pasien | Mediska Malang</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: #333;
+      background: #F9FAFB;
+      line-height: 1.5;
+    }
+
+    .top-header {
+      background: #F47721;
+      color: #fff;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .header-logo-left,
+    .header-logo-right {
+      height: 52px;
+      width: auto;
+      object-fit: contain;
+      border-radius: 5px;
+      background: #fff;
+      padding: 3px;
+    }
+
+    .brand h2 {
+      font-size: 17px;
+      line-height: 1.2;
+    }
+
+    .brand p {
+      font-size: 11px;
+      opacity: 0.9;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 24px auto;
+      padding: 0 24px;
+    }
+
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .page-title h1 {
+      font-size: 22px;
+      color: #111;
+      margin-bottom: 4px;
+    }
+
+    .page-title p {
+      font-size: 12px;
+      color: #666;
+    }
+
+    .btn-back {
+      background: #fff;
+      color: #333;
+      border: 1px solid #D1D5DB;
+      padding: 9px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .btn-back:hover {
+      background: #F3F4F6;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: #fff;
+      border: 1px solid #E5E7EB;
+      border-top: 4px solid #F47721;
+      border-radius: 8px;
+      padding: 18px;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .stat-card h3 {
+      font-size: 28px;
+      color: #F47721;
+      margin-bottom: 4px;
+    }
+
+    .stat-card p {
+      font-size: 11px;
+      color: #6B7280;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+    }
+
+    .panel {
+      background: #fff;
+      border: 1px solid #E5E7EB;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .panel-head {
+      background: #FFF7F0;
+      padding: 14px 20px;
+      font-weight: bold;
+      font-size: 14px;
+      border-bottom: 1px solid #F8D4B9;
+      color: #C2410C;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-body {
+      padding: 20px;
+    }
+
+    .action-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .search-bar {
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    input[type="text"], select {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid #D1D5DB;
+      border-radius: 6px;
+      font-size: 13px;
+      outline: none;
+      background: #fff;
+    }
+
+    input[type="text"]:focus, select:focus {
+      border-color: #F47721;
+      box-shadow: 0 0 0 3px rgba(244, 119, 33, 0.1);
+    }
+
+    button.export-btn {
+      background: #10B981;
+      color: #fff;
+      padding: 9px 16px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+
+    button.export-btn:hover {
+      background: #059669;
+    }
+
+    button.info-btn {
+      background: #3B82F6;
+      color: #fff;
+      padding: 5px 10px;
+      font-size: 11px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button.info-btn:hover {
+      background: #2563EB;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th {
+      background: #F9FAFB;
+      color: #374151;
+      padding: 12px 14px;
+      text-align: left;
+      font-weight: bold;
+      border-bottom: 2px solid #E5E7EB;
+    }
+
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #F3F4F6;
+      color: #4B5563;
+    }
+
+    tr:hover td {
+      background: #FAFAFA;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .status.waiting {
+      background: #FFF7F0;
+      color: #B7410E;
+    }
+
+    .status.called {
+      background: #FFE4E6;
+      color: #9F1239;
+    }
+
+    .status.waiting_pharmacy {
+      background: #FEF3C7;
+      color: #92400E;
+    }
+
+    .status.pharmacy_called {
+      background: #DBEAFE;
+      color: #1E40AF;
+    }
+
+    .status.done {
+      background: #E5E7EB;
+      color: #374151;
+    }
+
+    .empty-row {
+      text-align: center;
+      color: #9CA3AF;
+      padding: 40px;
+    }
+
+    .footer {
+      margin-top: 40px;
+      padding-top: 16px;
+      border-top: 1px solid #E5E7EB;
+      font-size: 12px;
+      color: #6B7280;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .stats-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .action-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .filter-group {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <script>
+    if (sessionStorage.getItem("mediska_logged_in") !== "true") {
+      window.location.href = "login.html";
+    }
+  </script>
+
+  <div class="top-header">
+    <div class="brand">
+      <img src="KAI.png" alt="Logo Kiri" class="header-logo-left" onerror="this.style.display='none'">
+      <div>
+        <h2>Mediska Malang</h2>
+        <p>REKAP STATISTIK & RIWAYAT PASIEN</p>
+      </div>
+    </div>
+    <img src="mediska.png" alt="Logo Kanan" class="header-logo-right" onerror="this.style.display='none'">
+  </div>
+
+  <div class="container">
+    <div class="page-header">
+      <div class="page-title">
+        <h1>Pusat Arsip & Statistik Kunjungan</h1>
+        <p>Data rekapitulasi lengkap seluruh kunjungan pasien Klinik Mediska Malang</p>
+      </div>
+      <a href="admin.html" class="btn-back">Kembali ke Admin</a>
+    </div>
+
+    <!-- KARTU STATISTIK INTERAKTIF -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <h3 id="statTotal">0</h3>
+        <p>TOTAL KUNJUNGAN</p>
+      </div>
+      <div class="stat-card">
+        <h3 id="statUmum">0</h3>
+        <p>DOKTER UMUM (ANTREAN A)</p>
+      </div>
+      <div class="stat-card">
+        <h3 id="statGigi">0</h3>
+        <p>DOKTER GIGI (ANTREAN B)</p>
+      </div>
+      <div class="stat-card">
+        <h3 id="statBpjsUmum">0 / 0</h3>
+        <p>BPJS / UMUM</p>
+      </div>
+    </div>
+
+    <!-- PANEL TABEL RIWAYAT -->
+    <div class="panel">
+      <div class="panel-head">
+        <span>📋 Data Riwayat & Arsip Kunjungan</span>
+        <span id="recordCount" style="font-size: 12px; font-weight: normal; color: #666;">Menampilkan 0 data</span>
+      </div>
+      <div class="panel-body">
+        <div class="action-bar">
+          <div class="search-bar">
+            <input id="searchInput" type="text" placeholder="🔍 Cari nama pasien, nomor antrean, atau dokter...">
+          </div>
+          <div class="filter-group">
+            <select id="filterPoli" style="width: 150px;">
+              <option value="Semua">Semua Poli</option>
+              <option value="Dokter Umum">Dokter Umum</option>
+              <option value="Dokter Gigi">Dokter Gigi</option>
+            </select>
+            <select id="filterJenis" style="width: 140px;">
+              <option value="Semua">Semua Jenis</option>
+              <option value="BPJS">BPJS</option>
+              <option value="Umum">Umum</option>
+            </select>
+            <button id="btnExport" class="export-btn">📥 Ekspor CSV</button>
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>WAKTU KUNJUNGAN</th>
+              <th>NOMOR</th>
+              <th>NAMA PASIEN</th>
+              <th>JENIS</th>
+              <th>POLI / TUJUAN</th>
+              <th>KELUHAN</th>
+              <th>STATUS AKHIR</th>
+            </tr>
+          </thead>
+          <tbody id="historyTable">
+            <tr><td colspan="7" class="empty-row">Memuat data riwayat...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="footer">© Klinik Mediska Malang</div>
+  </div>
+
+  <!-- MODAL LIHAT KELUHAN LENGKAP -->
+  <div id="complaintModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; align-items:center; justify-content:center;">
+    <div style="background:#fff; padding:24px; border-radius:8px; width:90%; max-width:400px; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
+      <h3 style="margin-bottom:8px; font-size:16px; color:#F47721;">Detail Keluhan Pasien</h3>
+      <p id="modalPatientInfo" style="font-size:12px; color:#666; margin-bottom:14px; border-bottom:1px solid #eee; padding-bottom:6px;"></p>
+      
+      <div style="background:#FFF7F0; border:1px solid #F8D4B9; padding:12px; border-radius:6px; margin-bottom:16px; font-size:13px; color:#333; white-space:pre-wrap; max-height:200px; overflow-y:auto;" id="modalComplaintBox"></div>
+
+      <button onclick="closeComplaintModal()" class="primary" style="background:#F47721; color:#fff; border:none; padding:10px; width:100%; border-radius:6px; font-weight:bold; cursor:pointer;">Tutup</button>
+    </div>
+  </div>
+
+  <!-- SCRIPT INTEGRASI FIREBASE REALTIME DATABASE -->
+  <script type="module">
+    import { db } from "./config.js";
+    import { ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    let historyDataMap = {};
+    const historyRef = ref(db, 'klinik_mediska/riwayat');
+
+    onValue(historyRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        historyDataMap = data;
+      } else {
+        historyDataMap = {};
+      }
+      render();
+    });
+
+    function esc(v) {
+      return String(v ?? "").replace(/[&<>"']/g, c => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[c]));
+    }
+
+    window.openComplaintModal = function(key) {
+      const p = historyDataMap[key];
+      if(!p) return;
+
+      document.getElementById("modalPatientInfo").textContent = `No: ${p.number} — Pasien: ${p.name}`;
+      document.getElementById("modalComplaintBox").textContent = p.complaint || "-";
+      document.getElementById("complaintModal").style.display = "flex";
+    };
+
+    window.closeComplaintModal = function() {
+      document.getElementById("complaintModal").style.display = "none";
+    };
+
+    function getNormalizedStatus(rawStatus) {
+      const s = String(rawStatus || "").toLowerCase().trim();
+      if (s === "waiting" || s === "menunggu") return { key: "waiting", label: "Menunggu", css: "waiting" };
+      if (s === "called" || s === "dipanggil" || s === "dipanggil dokter") return { key: "called", label: "Dipanggil Dokter", css: "called" };
+      if (s === "waiting_pharmacy" || s === "ke farmasi" || s === "menunggu obat") return { key: "waiting_pharmacy", label: "Menunggu Obat", css: "waiting_pharmacy" };
+      if (s === "pharmacy_called" || s === "di farmasi" || s === "dipanggil farmasi") return { key: "pharmacy_called", label: "Dipanggil Farmasi", css: "pharmacy_called" };
+      if (s === "done" || s === "selesai") return { key: "done", label: "Selesai", css: "done" };
+      return { key: "waiting", label: rawStatus || "Menunggu", css: "waiting" };
+    }
+
+    function render() {
+      const q = document.getElementById("searchInput")?.value.trim().toLowerCase() || "";
+      const filterPoli = document.getElementById("filterPoli")?.value || "Semua";
+      const filterJenis = document.getElementById("filterJenis")?.value || "Semua";
+      
+      const historyPatients = Object.entries(historyDataMap).map(([key, val]) => ({
+        firebaseKey: key,
+        ...val
+      }));
+
+      const total = historyPatients.length;
+      const countUmum = historyPatients.filter(p => p.prefix === "A").length;
+      const countGigi = historyPatients.filter(p => p.prefix === "B").length;
+      const countBpjs = historyPatients.filter(p => p.patientType === "BPJS").length;
+      const countUmumType = historyPatients.filter(p => p.patientType === "Umum").length;
+
+      document.getElementById("statTotal").textContent = total;
+      document.getElementById("statUmum").textContent = countUmum;
+      document.getElementById("statGigi").textContent = countGigi;
+      document.getElementById("statBpjsUmum").textContent = `${countBpjs} / ${countUmumType}`;
+
+      let filtered = [...historyPatients].reverse();
+
+      if (q) {
+        filtered = filtered.filter(p =>
+          (p.name && p.name.toLowerCase().includes(q)) || 
+          (p.number && p.number.toLowerCase().includes(q)) || 
+          (p.doctor && p.doctor.toLowerCase().includes(q))
+        );
+      }
+
+      if (filterPoli !== "Semua") {
+        filtered = filtered.filter(p => p.doctor === filterPoli);
+      }
+
+      if (filterJenis !== "Semua") {
+        filtered = filtered.filter(p => p.patientType === filterJenis);
+      }
+
+      document.getElementById("recordCount").textContent = `Menampilkan ${filtered.length} dari ${total} data`;
+
+      document.getElementById("historyTable").innerHTML = filtered.length
+        ? filtered.map(p => {
+          const timeStr = p.createdAt ? new Date(p.createdAt).toLocaleString("id-ID", {
+            day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit"
+          }) : "-";
+
+          let complaintCell = "-";
+          if (p.complaint && p.complaint !== "-") {
+            complaintCell = `<button class="info-btn" onclick="openComplaintModal('${p.firebaseKey}')">Lihat Keluhan</button>`;
+          }
+
+          const statusObj = getNormalizedStatus(p.status);
+
+          return `
+            <tr>
+              <td>${timeStr}</td>
+              <td><strong>${esc(p.number)}</strong></td>
+              <td>${esc(p.name)}</td>
+              <td><span style="font-weight: bold; color: ${p.patientType === 'BPJS' ? '#2563EB' : '#059669'};">${esc(p.patientType)}</span></td>
+              <td>${esc(p.doctor)}</td>
+              <td>${complaintCell}</td>
+              <td><span class="status ${statusObj.css}">${statusObj.label}</span></td>
+            </tr>
+          `;
+        }).join("")
+        : `<tr><td colspan="7" class="empty-row">Tidak ada riwayat pasien yang cocok dengan filter.</td></tr>`;
+    }
+
+    document.getElementById("btnExport").addEventListener("click", () => {
+      const historyPatients = Object.values(historyDataMap);
+      if (historyPatients.length === 0) {
+        alert("Tidak ada data untuk diekspor!");
+        return;
+      }
+
+      let csvContent = "data:text/csv;charset=utf-8,Waktu,Nomor Antrean,Nama Pasien,Jenis,Poli,Keluhan,Status\r\n";
+      
+      historyPatients.forEach(p => {
+        const timeStr = p.createdAt ? new Date(p.createdAt).toLocaleString("id-ID") : "-";
+        const cleanName = `"${(p.name || "").replace(/"/g, '""')}"`;
+        const cleanComplaint = `"${(p.complaint || "-").replace(/"/g, '""')}"`;
+        const statusObj = getNormalizedStatus(p.status);
+        const row = [timeStr, p.number, cleanName, p.patientType, p.doctor, cleanComplaint, statusObj.label].join(",");
+        csvContent += row + "\r\n";
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `Riwayat_Kunjungan_Mediska_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+
+    document.getElementById("searchInput")?.addEventListener("input", render);
+    document.getElementById("filterPoli")?.addEventListener("change", render);
+    document.getElementById("filterJenis")?.addEventListener("change", render);
+  </script>
+</body>
+
+</html>
