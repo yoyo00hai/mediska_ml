@@ -114,14 +114,6 @@
       color: #fff
     }
 
-    .brand-sub {
-      font-size: 12px;
-      letter-spacing: 1.3px;
-      color: #fff;
-      margin-top: 3px;
-      opacity: .95
-    }
-
     .topbar-right {
       display: flex;
       align-items: center;
@@ -348,7 +340,7 @@
 
   <div id="audioOverlay">
     <h2>Klinik Mediska Malang</h2>
-    <p>Layar Publik Antrean siap digunakan. Klik tombol di bawah ini untuk mengaktifkan sistem suara dan membuka tampilan utama[cite: 6].</p>
+    <p>Layar Publik Antrean siap digunakan. Klik tombol di bawah ini untuk mengaktifkan sistem suara dan membuka tampilan utama.</p>
     <button id="btnEnableAudio">🔊 Aktifkan Suara & Mulai Display</button>
   </div>
 
@@ -358,7 +350,6 @@
         <img src="KAI.png" alt="Logo Kiri" class="brand-logo-img" onerror="this.style.display='none'">
         <div>
           <div class="brand-name">Mediska Malang</div>
-          <div class="brand-sub">SISTEM ANTREAN PASIEN</div>
         </div>
       </div>
 
@@ -387,7 +378,7 @@
     <div class="main-grid">
       <section class="panel">
         <div class="panel-head">
-          <div class="panel-title">Dokter Umum (A)</div>
+          <div class="panel-title">Dokter Umum</div>
           <div class="panel-caption">Sedang Dipanggil</div>
         </div>
         <div class="current-body" id="currentUmum">
@@ -397,7 +388,7 @@
 
       <section class="panel">
         <div class="panel-head">
-          <div class="panel-title">Dokter Gigi (B)</div>
+          <div class="panel-title">Dokter Gigi</div>
           <div class="panel-caption">Sedang Dipanggil</div>
         </div>
         <div class="current-body" id="currentGigi">
@@ -441,6 +432,14 @@
     let speechQueue = [];
     let isSpeaking = false;
     let audioUnlocked = false;
+
+    // Load awal daftar suara agar terbaca sistem .exe
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.getVoices();
+      window.speechSynthesis.onvoiceschanged = () => {
+        window.speechSynthesis.getVoices();
+      };
+    }
 
     document.getElementById("btnEnableAudio").addEventListener("click", () => {
       audioUnlocked = true;
@@ -493,6 +492,13 @@
         const ucapan = new SpeechSynthesisUtterance(text);
         ucapan.lang = "id-ID";
         ucapan.rate = 0.85;
+
+        // Memaksa mencari suara Bahasa Indonesia di sistem komputer/exe
+        const voices = window.speechSynthesis.getVoices();
+        const indonesianVoice = voices.find(v => v.lang === 'id-ID' || v.lang === 'id_ID' || v.name.toLowerCase().includes('indonesian'));
+        if (indonesianVoice) {
+            ucapan.voice = indonesianVoice;
+        }
 
         ucapan.onend = () => {
           isSpeaking = false;
