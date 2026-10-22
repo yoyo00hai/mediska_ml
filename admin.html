@@ -338,11 +338,12 @@
                   <th>POLI</th>
                   <th>KELUHAN</th>
                   <th>STATUS</th>
+                  <th>AKSI</th>
                 </tr>
               </thead>
               <tbody id="allPatientTable">
                 <tr>
-                  <td colspan="6" class="empty-row">Belum ada pasien terdaftar.</td>
+                  <td colspan="7" class="empty-row">Belum ada pasien terdaftar.</td>
                 </tr>
               </tbody>
             </table>
@@ -472,6 +473,17 @@
       document.getElementById("complaintModal").style.display = "none";
     };
 
+    // Fungsi untuk menghapus pasien satu per satu
+    window.deletePatient = function(id) {
+      const p = state.patients.find(item => item.id === id);
+      if (!p) return;
+
+      if (confirm(`Apakah Anda yakin ingin menghapus pasien ${p.number} — ${p.name}?`)) {
+        state.patients = state.patients.filter(item => item.id !== id);
+        saveState();
+      }
+    };
+
     function render() {
       const labelStatus = {
         waiting: "Menunggu",
@@ -497,10 +509,13 @@
               <td>${esc(p.doctor)}</td>
               <td>${complaintCell}</td>
               <td><span class="status ${esc(p.status)}">${labelStatus[p.status] || p.status}</span></td>
+              <td>
+                <button class="danger" style="padding: 5px 10px; font-size: 11px; width: auto; margin: 0;" onclick="deletePatient('${p.id}')">Hapus</button>
+              </td>
             </tr>
           `;
         }).join("")
-        : `<tr><td colspan="6" class="empty-row">Belum ada pasien terdaftar.</td></tr>`;
+        : `<tr><td colspan="7" class="empty-row">Belum ada pasien terdaftar.</td></tr>`;
     }
 
     function renderChat() {
