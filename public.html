@@ -62,5 +62,26 @@
     <div class="code">KODE STATUS: ERR_CONNECTION_DATABASE_FAILED</div>
   </div>
 
+  <!-- SKRIP AUTO-REFRESH OTOMATIS SAAT ADA COMMIT DI GITHUB -->
+  <script>
+    let currentVersion = null;
+
+    setInterval(async () => {
+      try {
+        const response = await fetch(window.location.href, { method: 'HEAD', cache: 'no-store' });
+        const lastModified = response.headers.get('Last-Modified');
+
+        if (!currentVersion) {
+          currentVersion = lastModified;
+        } else if (currentVersion !== lastModified) {
+          console.log("Pembaruan terdeteksi di server. Memuat ulang...");
+          location.reload();
+        }
+      } catch (error) {
+        // Abaikan gangguan jaringan sesaat
+      }
+    }, 10000); // Mengecek setiap 10 detik
+  </script>
+
 </body>
 </html>
